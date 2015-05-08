@@ -1,0 +1,4 @@
+body { overflow: hidden; background-image: url('/img/resist_2.png'); background-color: black !important; background-size: 100% auto; background-repeat: no-repeat; Background-position: center; }
+#app { height: 80%; max-width: 80%; width: 60%; margin: 5% auto; }
+.main { height: 100%; }
+.center-block { margin: 0 auto; }
