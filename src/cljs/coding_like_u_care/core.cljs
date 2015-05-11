@@ -13,13 +13,65 @@
 (defn home-page []
   [:section
    [:div {:class "row well"}
-    [:h1 {:class "col-sm-12"} "Coding Like U Fucking Care "]]
-   [:div {:class "row"}
-    [:h3 {:class "col-sm-8"} "A brief talk about our craft and how we can improve our way to work and comunicate through code."]]])
+    [:h1 {:class "title"} "Coding Like U Care!"]]
+   [:div {:class "row first"}
+    [:p {:class "col-sm-12"} "A brief talk about our craft, how we can improve our thinking, our team comunication and the art of express intetion through code."]]])
 
-(defn about-page []
-  [:div [:h2 "About coding-like-u-care"]
-   [:div [:a {:href "#/"} "go to the home page"]]])
+(defn problems-page []
+  [:section
+   [:div {:class "row well"}
+    [:h1 "Problems"]]
+   [:div {:class "row main"}
+    [:ul
+     [:li "Code Maintenance"]
+     [:li "Procedural and Closed Implementations"]
+     [:li "Poluted Code"]
+     [:li "Large Classes"]
+     [:li "Large Methods"]
+     [:li "And lots of bugs..."]]]])
+
+(defn topics-page []
+  [:section
+   [:div {:class "row well"}
+    [:h1 "Topics"]]
+   [:div {:class "row main"}
+    [:div {:class "col-sm-4"}
+     [:div {:class "row"}
+      [:h3 "Code"]]
+     [:div {:class "row"}
+      [:ul
+       [:li "Naming"]
+       [:li "Functions"]
+       [:li "Form"]
+       [:li "Refactoring"]
+       [:li "Code Smells"]]]]
+    [:div {:class "col-sm-4"}
+     [:div {:class "row"}
+      [:h3 "Design"]]
+     [:div {:class "row"}
+      [:ul
+       [:li "SOLID"]
+       [:li "Package Cohesion/Coupling Principles"]
+       [:li "Design Smells"]
+       [:li "Patterns"]]]]
+    [:div {:class "col-sm-4"}
+     [:div {:class "row"}
+      [:h3 "Practices"]]
+     [:div {:class "row"}
+      [:ul
+       [:li "Testing"]]]]]])
+
+(defn weakness-page []
+  [:section
+   [:div {:class "row well"}
+    [:h1 "Weakness"]]
+   [:div {:class "row main"}
+    [:ul
+     [:li "Write code that is easy to understand and maintain"]
+     [:li "Separate code in small reusable units"]
+     [:li "Test in efficient way"]
+     [:li "Talk about code"]
+     [:li "Have a life"]]]])
 
 (defn current-page []
   [:div [(session/get :current-page)]])
@@ -30,9 +82,6 @@
 
 (secretary/defroute "/" []
   (session/put! :current-page #'home-page))
-
-(secretary/defroute "/about" []
-  (session/put! :current-page #'about-page))
 
 ;; -------------------------
 ;; History
@@ -45,14 +94,18 @@
        (secretary/dispatch! (.-token event))))
     (.setEnabled true)))
 
-(def pages [#'home-page #'about-page])
+(def pages [#'home-page
+            #'topics-page
+            #'problems-page
+            #'weakness-page])
 
 (def cur-page (atom 0))
 
 (defn next-page []
-  (let [cur (get pages cur-page)]
-    (if (> cur (inc (count pages))) cur
-        (inc cur))))
+  (let [cur (deref cur-page)
+        next (inc (deref cur-page))]
+    (if (= next (count pages)) cur
+        next)))
 
 (defn move-to-next []
   (let [n (next-page)]
@@ -60,9 +113,10 @@
     (session/put! :current-page (nth pages n))))
 
 (defn prev-page []
-  (let [cur (get pages cur-page)]
-    (if (<= cur 0) 0
-        (dec cur))))
+  (let [cur (deref cur-page)
+        prev (dec (deref cur-page))]
+    (if (= cur 0) cur
+        prev)))
 
 (defn move-to-prev []
   (let [n (prev-page)]
@@ -71,8 +125,9 @@
 
 (defn keydown [event]
   (let [key (.-keyCode event)]
-    (if (= key 37) (move-to-next)
-        (move-to-prev))))
+    (cond
+      (= key 37) (move-to-prev)
+      (= key 39) (move-to-next))))
 
 
 (defn document-listener []

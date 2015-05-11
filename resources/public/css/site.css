@@ -1,4 +1,13 @@
 body { overflow: hidden; background-image: url('/img/resist_2.png'); background-color: black !important; background-size: 100% auto; background-repeat: no-repeat; Background-position: center; }
+
 #app { height: 80%; max-width: 80%; width: 60%; margin: 5% auto; }
-.main { height: 100%; }
+
+.well { opacity: 0.8; }
+
+.title { text-align: center; }
+
+.first { padding: 5%; font-size: 1.8em; text-align: center; }
+
+.main { height: 100%; padding: 0 19px; font-size: 1.4em; }
+
 .center-block { margin: 0 auto; }
